@@ -12,4 +12,4 @@ class parse():
 
     def checkname(self, txt):
         self.input = txt
-        Logger.log("Parsing {0}".format(txt), 'INFO')
+        log("Parsing {0}".format(txt), 'INFO')

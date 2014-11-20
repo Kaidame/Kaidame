@@ -4,7 +4,7 @@ from kaidame.Core import *
 
 
 def optsargs():
-    Logger.log("Checking boot time arguments", "INFO")
+    log("Checking boot time arguments", "INFO")
     from optparse import OptionParser
 
     p = OptionParser()

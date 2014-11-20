@@ -7,6 +7,22 @@ import os
 logwriter = Logger.Loch()
 logwriter.initialize()
 
+#New format logging IMHO a better practice
+def log(message, level):
+    if str(level).lower() == 'debug':
+        logwriter.log(message, lvl='DEBUG')
+    elif str(level).lower() == 'info':
+        logwriter.log(message, lvl='INFO')
+    elif str(level).lower() == 'warning':
+        logwriter.log(message, lvl='WARN')
+    elif str(level).lower() == 'error':
+        logwriter.log(message, lvl='ERROR')
+    elif str(level).lower() == 'trace':
+        logwriter.log(message, lvl='TRACE')
+    else:
+        logwriter.log(message, lvl='')
+
+
 #Check if we are an exe made by py2exe
 def check_frozen():
     return hasattr(sys, 'frozen')
@@ -25,17 +41,7 @@ def get_update():
     pass
 
 
-#New format logging IMHO a better practice
-def log(message, level):
-    if str(level).lower() == 'debug':
-        logwriter.log(message, lvl='DEBUG')
-    elif str(level).lower() == 'info':
-        logwriter.log(message, lvl='INFO')
-    elif str(level).lower() == 'warning':
-        logwriter.log(message, lvl='WARN')
-    elif str(level).lower() == 'error':
-        logwriter.log(message, lvl='ERROR')
-    elif str(level).lower() == 'trace':
-        logwriter.log(message, lvl='TRACE')
-    else:
-        logwriter.log(message, lvl='')
+def quit():
+    for t in kaidame.threads:
+        t.join()
+    log("Exiting main Thread", "INFO")

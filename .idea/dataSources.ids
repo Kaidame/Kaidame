@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="dataSourceStorage">
-  <data-source source="LOCAL" name="SQLite -" uuid="cc46d26a-28a3-41ee-be6f-767568fabff4">
+  <data-source source="LOCAL" name="Kaidame" uuid="b1d9af56-4460-48c1-b495-9700b3bd5636">
     <database-info product="SQLite" version="3.7.6.3" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native"/>
     <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed"/>
     <schema name="" catalog=""/>
+    <table name="version" schema="" catalog="" type="TABLE">
+      <column name="versionID" sqlType="TEXT" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="versionNR" sqlType="TEXT" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+    </table>
   </data-source>
 </component>
