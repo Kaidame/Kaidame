@@ -1,5 +1,7 @@
 import threading
-import framework
+import kaidame
+from kaidame import *
+from kaidame.Core import *
 
 
 class Thread(threading.Thread):
@@ -10,5 +12,5 @@ class Thread(threading.Thread):
         self.command = command
 
     def run(self):
-        framework.logger.log("Starting Thread {0}".format(self.name), "INFO")
+        Logger.log("Starting Thread {0}".format(self.name), "INFO")
         self.command()

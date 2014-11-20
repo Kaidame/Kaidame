@@ -4,16 +4,17 @@ __version__ = '1.0'
 import os
 import threading
 import logging
+import kaidame
 from logging import handlers
 
 
 class Loch(object):
 
     def __init__(self):
-        self.filename = "logging.log"
+        self.filename = "kaidame.log"
         self.maxsize = 1000000
         self.maxfiles = 5
-        self.logdir = os.path.abspath("./Logs")
+        self.logdir = os.path.abspath(os.path.join("Data", "Logs"))
         self.loggername = __name__  # "TraceLogger"
         self.level = 9
         self.logfilelocation = ""
@@ -76,38 +77,22 @@ class Loch(object):
         else:
             logger.error("***UNKNOWN*** {0}".format(msg))
 
-logwriter = Loch()
-logwriter.initialize()
-
-
-#New format logging IMHO a better practice
-def log(message, level):
-    if str(level).lower() == 'debug':
-        logwriter.log(message, lvl='DEBUG')
-    elif str(level).lower() == 'info':
-        logwriter.log(message, lvl='INFO')
-    elif str(level).lower() == 'warning':
-        logwriter.log(message, lvl='WARN')
-    elif str(level).lower() == 'error':
-        logwriter.log(message, lvl='ERROR')
-    elif str(level).lower() == 'trace':
-        logwriter.log(message, lvl='TRACE')
-    else:
-        logwriter.log(message, lvl='')
-
-
-#Legacy Logging, will be moved over to new format
-def debug(message):
-    log(message, 'DEBUG')
-
-
-def info(message):
-    log(message, 'INFO')
-
-
-def warn(message):
-    log(message, 'WARNING')
-
-
-def error(message):
-    log(message, 'ERROR')
+#Initialize logging on it's own
+# logwriter = Loch()
+# logwriter.initialize()
+#
+#
+# #New format logging IMHO a better practice
+# def log(message, level):
+#     if str(level).lower() == 'debug':
+#         logwriter.log(message, lvl='DEBUG')
+#     elif str(level).lower() == 'info':
+#         logwriter.log(message, lvl='INFO')
+#     elif str(level).lower() == 'warning':
+#         logwriter.log(message, lvl='WARN')
+#     elif str(level).lower() == 'error':
+#         logwriter.log(message, lvl='ERROR')
+#     elif str(level).lower() == 'trace':
+#         logwriter.log(message, lvl='TRACE')
+#     else:
+#         logwriter.log(message, lvl='')

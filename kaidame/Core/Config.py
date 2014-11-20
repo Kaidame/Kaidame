@@ -1,6 +1,7 @@
+import kaidame
 from kaidame import *
-from kaidame.Lib.configobj.configobj import ConfigObj, flatten_errors, ConfigObjError
-from kaidame.Lib.configobj.validate import Validator
+from kaidame.Core import *
+from kaidame.Lib import *
 
 
 class ConfigCheck():
@@ -16,14 +17,14 @@ class ConfigCheck():
             self.config = ConfigObj(configspec='./framework/Core/configspec.ini', file_error=True)
             self.config.filename = self.configfile
         except (ConfigObjError, IOError), e:
-            kaidame.logger.log("Could not read {0}: {1}".format(self.configfile, e), "Error")
+            Logger.log("Could not read {0}: {1}".format(self.configfile, e), "Error")
         self.results = self.config.validate(self.validator, copy=True)
         if not self.results:
             for (section_list, key, _) in flatten_errors(self.config, self.results):
                 if key is not None:
-                    kaidame.logger.log('The {0} key in the section {1} failed validation'.format(key, ', '.join(section_list)), "ERROR")
+                    Logger.log('The {0} key in the section {1} failed validation'.format(key, ', '.join(section_list)), "ERROR")
                 else:
-                    kaidame.logger.log('The following section was missing:{0} '.format(', '.join(section_list)), "ERROR")
+                    Logger.log('The following section was missing:{0} '.format(', '.join(section_list)), "ERROR")
 
     def config_write(self):
         self.config.write()
