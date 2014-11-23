@@ -14,9 +14,17 @@ class processing():
         self.lock = Lock()
 
 
-
-def processing(targ, argse, joins, namel):
+def proces(targ, argse, joins, namel, *lock):
     p = Process(target=targ, args=argse, name=namel)
+    if lock:
+        pass
     p.start()
     if joins:
         p.join()
+
+
+def test(tst=False):
+    if tst:
+        print "bawls"
+
+test()
