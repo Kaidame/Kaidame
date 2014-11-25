@@ -18,3 +18,4 @@ class Thread(threading.Thread):
         self.command()
 
     def Lock(self):
+        pass

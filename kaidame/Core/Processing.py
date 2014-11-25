@@ -1,23 +1,31 @@
 from multiprocessing import Process, Lock
+import Kaidame
+from kaidame import *
 import socket, select
 #https://docs.python.org/2/library/multiprocessing.html
 
 
-class Processing():
+class Proc():
 
     def __init__(self):
         self.p = ''
         self.lock = ''
+        self.name = ''
         pass
 
     def start(self, targ, argse, namel, dmn=False):
         self.p = Process(target=targ, args=argse, name=namel)
-        print self.p.name
+        try:
+            log(self.p.name, "INFO")
+        except NameError:
+            pass
         if dmn:
-            print('Daemonizing')
+            try:
+                log('Daemonizing', "INFO")
+            except NameError:
+                pass
             self.p.daemon = True
         self.p.start()
-
 
     def lock(self):
         self.lock = Lock()
@@ -30,8 +38,6 @@ def proces(targ, argse, joins, namel, lock=False):
     p.start()
     if joins:
         p.join()
-
-mproc = Processing()
 
 
 class CommandServer:
@@ -46,11 +52,11 @@ class CommandServer:
         self.srvsock.listen(50)
 
         self.descriptors = [self.srvsock]
-        print('Server started')
+        log('Server started', "INFO")
 
     def start(self):
         #Create server thread
-        mproc.start(self.run('Strings'), '', 'Server', dmn=True)
+        kaidame.processing.start(self.run('Strings'), '', 'Server', dmn=True)
 
     def run(self, stri):
         print stri
@@ -130,6 +136,3 @@ class CommandServer:
         host = [str(host), int(port)]
         host = tuple(host)
         self.broadcast_string(command, self.srvsock, host)
-
-cmd = CommandServer()
-cmd.start()

@@ -3,6 +3,7 @@ __version__ = '1.0'
 
 import os
 import threading
+import multiprocessing
 import logging
 import kaidame
 from logging import handlers
@@ -20,6 +21,7 @@ class Loch(object):
         self.logfilelocation = ""
         self._debug = True
         self._trace = True
+        self.thread = ''
 
     def initialize(self):
         logging.addLevelName(9, "TRACE")
@@ -52,13 +54,22 @@ class Loch(object):
     def log(self, msg, lvl):
 
         logger = logging.getLogger(self.loggername)
+        if multiprocessing.current_process().name == "Main":
+            self.thread = 'LOGGER'
+            mps = True
+        else:
+            self.thread = multiprocessing.current_process().name
+            mps = True
+
+        print self.thread
+
         if threading.currentThread().name == "MainThread":
             threading.currentThread().name = "LOGGER"
-            thread = threading.currentThread().getName()
+            self.thread = threading.currentThread().getName()
         else:
-            thread = threading.currentThread().getName()
+            self.thread = threading.currentThread().getName()
 
-        msg = '{0}\t{1}'.format(thread, msg)
+        msg = '{0}\t{1}'.format(self.thread, msg)
 
         if lvl == 'DEBUG' and self._debug:
             logger.debug(msg)

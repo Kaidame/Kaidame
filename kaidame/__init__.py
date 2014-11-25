@@ -9,31 +9,30 @@ from Lib import *
 from Core import *
 
 #global imports
-import threading
+#import Processing
 
-threading.Thread.name = __product__
-threadlock = threading.Lock()
+#Processing = Processing.Processing()
+#Processing.name = __product__
 #True False statements
 __initialized__ = debugging = update = tracing = False
 #Empty string statements
-configfile = rundir = logdir = datadir = dbasefile = dbfunc = logwriter = ''
+configfile = rundir = logdir = datadir = dbasefile = dbfunc = logwriter = log = ''
 #Empty lists
-options = args = threads = []
+options = args = process = []
 #Empty dicts
 tmpd = dict()
 
 
 def initialize():
-    threadlock.acquire()
     #Set all variables needed as global variables
     global __initialized__, debugging, rundir, options, args, datadir, logdir, dbasefile, configfile, dbfunc, \
-        tracing, logwriter, threads
+        tracing, logwriter, process, log
 
     #add to the sys path for convenience
     rundir = get_rundir()
     sys.path.insert(0, rundir)
 
-    log = Core.log
+    #log = Core.log
 
     log("Initializing {0} {1}".format(__product__, __version__), "INFO")
 
@@ -41,7 +40,7 @@ def initialize():
     datadir = os.path.join(rundir, 'Data')
     logdir = os.path.join(datadir, 'Logs')
 
-    threads = []
+    process = Core.processing()
 
     #Set some files
     configfile = os.path.join(datadir, 'config.ini')
@@ -60,7 +59,7 @@ def initialize():
     Logger._trace = tracing
 
     __initialized__ = True
-    threadlock.release()
+    #threadlock.release()
     return True
 
 
