@@ -7,6 +7,7 @@ __version__ = '0.0.1'
 #Imports from the module itself
 from Lib import *
 from Core import *
+from Core import Loch
 
 #global imports
 #import Processing
@@ -16,19 +17,32 @@ from Core import *
 #True False statements
 __initialized__ = debugging = update = tracing = False
 #Empty string statements
-configfile = rundir = logdir = datadir = dbasefile = dbfunc = logwriter = log = ''
+configfile = rundir = logdir = datadir = dbasefile = dbfunc = ''
 #Empty lists
 options = args = process = []
+#Empty functions
+logwriter = log = None
 #Empty dicts
 tmpd = dict()
+
+
+logwriter = Loch()
+logwriter.initialize()
+
+
+def log(msg, inf):
+    logwriter.log(msg, inf)
 
 
 def initialize():
     #Set all variables needed as global variables
     global __initialized__, debugging, rundir, options, args, datadir, logdir, dbasefile, configfile, dbfunc, \
-        tracing, logwriter, process, log
+        tracing, process, __product__, __version__
 
     #add to the sys path for convenience
+
+    __version__ = __version__
+    __product__ = __product__
     rundir = get_rundir()
     sys.path.insert(0, rundir)
 
@@ -40,13 +54,12 @@ def initialize():
     datadir = os.path.join(rundir, 'Data')
     logdir = os.path.join(datadir, 'Logs')
 
-    process = Core.processing()
+    #process = processing()
 
     #Set some files
     configfile = os.path.join(datadir, 'config.ini')
     dbasefile = os.path.join(datadir, 'Kaidame.sqlite')
 
-    logwriter = logwriter
     dbfunc = dbmod()
 
     #check if arguments where passed
@@ -55,8 +68,8 @@ def initialize():
     debugging = True
     tracing = True
 
-    Logger._debug = debugging
-    Logger._trace = tracing
+    kaidame.Core.Loch._debug = debugging
+    kaidame.Core.Loch._trace = tracing
 
     __initialized__ = True
     #threadlock.release()

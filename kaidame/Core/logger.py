@@ -5,7 +5,7 @@ import os
 import threading
 import multiprocessing
 import logging
-import kaidame
+#import kaidame
 from logging import handlers
 
 
@@ -22,34 +22,39 @@ class Loch(object):
         self._debug = True
         self._trace = True
         self.thread = ''
+        self.init = False
 
     def initialize(self):
-        logging.addLevelName(9, "TRACE")
-        logger = logging.getLogger(self.loggername)
-        logger.setLevel(self.level)
+        if not self.init:
+            logging.addLevelName(9, "TRACE")
+            logger = logging.getLogger(self.loggername)
+            logger.setLevel(self.level)
 
-        def trace(self, message, *args, **kws):
-            self._log(9, message, args, **kws)
-        logging.Logger.trace = trace
+            def trace(self, message, *args, **kws):
+                self._log(9, message, args, **kws)
+            logging.Logger.trace = trace
 
-        if not os.path.exists(self.logdir):
-            os.makedirs(self.logdir)
+            if not os.path.exists(self.logdir):
+                os.makedirs(self.logdir)
 
-        self.logfilelocation = os.path.join(self.logdir, self.filename)
-        formatter = logging.Formatter('%(asctime)s : %(levelname)-5s\t%(message)s', '%d-%b-%Y %H:%M:%S')
-        handler = handlers.RotatingFileHandler(self.logfilelocation, maxBytes=self.maxsize, backupCount=self.maxfiles, )
-        handler.setLevel(self.level)
+            self.logfilelocation = os.path.join(self.logdir, self.filename)
+            formatter = logging.Formatter('%(asctime)s : %(levelname)-5s\t%(message)s', '%d-%b-%Y %H:%M:%S')
+            handler = handlers.RotatingFileHandler(self.logfilelocation, maxBytes=self.maxsize, backupCount=self.maxfiles, )
+            handler.setLevel(self.level)
 
-        streamhandler = logging.StreamHandler()
-        streamhandler.setLevel(logging.INFO)
-        if self._debug:
-            streamhandler.setLevel(10)
-        if self._trace:
-            streamhandler.setLevel(9)
-        streamhandler.setFormatter(formatter)
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
-        logger.addHandler(streamhandler)
+            streamhandler = logging.StreamHandler()
+            streamhandler.setLevel(logging.INFO)
+            if self._debug:
+                streamhandler.setLevel(10)
+            if self._trace:
+                streamhandler.setLevel(9)
+            streamhandler.setFormatter(formatter)
+            handler.setFormatter(formatter)
+            logger.addHandler(handler)
+            logger.addHandler(streamhandler)
+
+            self.log("Logging Initialized!", "INFO")
+            self.init = True
 
     def log(self, msg, lvl):
 
@@ -61,7 +66,7 @@ class Loch(object):
             self.thread = multiprocessing.current_process().name
             mps = True
 
-        print self.thread
+        #print self.thread
 
         if threading.currentThread().name == "MainThread":
             threading.currentThread().name = "LOGGER"

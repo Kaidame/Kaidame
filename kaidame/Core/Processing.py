@@ -1,6 +1,6 @@
 from multiprocessing import Process, Lock
-import Kaidame
-from kaidame import *
+#import Kaidame
+#from kaidame import *
 import socket, select
 #https://docs.python.org/2/library/multiprocessing.html
 
@@ -14,21 +14,19 @@ class Proc():
         pass
 
     def start(self, targ, argse, namel, dmn=False):
-        self.p = Process(target=targ, args=argse, name=namel)
-        try:
-            log(self.p.name, "INFO")
-        except NameError:
-            pass
+        self.p = Process()
+        self.p._target = targ
+        self.p._args = argse
+        self.p._name = namel
         if dmn:
-            try:
-                log('Daemonizing', "INFO")
-            except NameError:
-                pass
             self.p.daemon = True
         self.p.start()
 
     def lock(self):
         self.lock = Lock()
+
+    def kill(self, namel):
+        self.p.join(name=namel)
 
 
 def proces(targ, argse, joins, namel, lock=False):
@@ -52,11 +50,11 @@ class CommandServer:
         self.srvsock.listen(50)
 
         self.descriptors = [self.srvsock]
-        log('Server started', "INFO")
 
     def start(self):
         #Create server thread
-        kaidame.processing.start(self.run('Strings'), '', 'Server', dmn=True)
+        proce = Proc()
+        proce.start(self.run('Strings'), 'Lock', namel='Server', dmn=True)
 
     def run(self, stri):
         print stri

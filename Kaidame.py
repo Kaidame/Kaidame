@@ -5,7 +5,7 @@ from kaidame.Core import *
 
 if __name__ == '__main__':
     processing = Proc()
-    log = Loch()
+
     #Threader.Thread(1, 'init', initialize())
     processing.start(initialize(), 'lock', 'init')
     #initialize()
