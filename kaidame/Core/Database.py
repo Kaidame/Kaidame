@@ -2,7 +2,10 @@ import kaidame
 from kaidame import *
 from kaidame.Core import *
 import sqlite3
+import os
 
+def log(msg, sev):
+    kaidame.log(msg, sev)
 
 class dbmod():
 

@@ -4,9 +4,6 @@ from kaidame.Core import *
 import sys
 import os
 
-logwriter = Logger.Loch()
-logwriter.initialize()
-
 #New format logging IMHO a better practice
 def log(message, level):
     if str(level).lower() == 'debug':
