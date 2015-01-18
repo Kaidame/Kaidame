@@ -5,12 +5,10 @@ __product__ = 'Kaidame'
 __version__ = '0.0.1'
 
 #Imports from the module itself
-from Lib import *
-from Core import *
-from Core.Logger import Loch
-import Core.Regular_Functions
-import Core.Database
-import Core.Arguments
+import Core.Logger as Logger
+import Core.Regular_Functions as Regular_Functions
+import Core.Database as Database
+import Core.Arguments as Arguments
 import sys
 import os
 
@@ -22,35 +20,39 @@ import os
 #True False statements
 __initialized__ = debugging = update = tracing = False
 #Empty string statements
-configfile = rundir = logdir = datadir = dbasefile = dbfunc = ''
+configfile = rundir = logdir = datadir = dbasefile = dbfunc = server_port = server_user = server_root = server_host = \
+    server_pass = ''
 #Empty lists
 options = args = process = []
 #Empty functions
 #Empty dicts
 tmpd = dict()
 
-
-logwriter = Loch()
-logwriter.initialize()
-
+try:
+    if not logwriter in globals():
+        pass
+except NameError:
+    print "log init"
+    logwriter = Logger.Loch()
+    logwriter.initialize()
 
 def log(msg, inf):
     logwriter.log(msg, inf)
 
-
 def initialize():
+
     #Set all variables needed as global variables
     global __initialized__, debugging, rundir, options, args, datadir, logdir, dbasefile, configfile, dbfunc, \
-        tracing, process, __product__, __version__, log
+        tracing, process, __product__, __version__, logwriter, webserver, cherrypy, \
+        server_port, server_user, server_root, server_host, server_pass
 
     #add to the sys path for convenience
 
     __version__ = __version__
     __product__ = __product__
-    rundir = Core.Regular_Functions.get_rundir()
-    sys.path.insert(0, rundir)
-
-    #log = Core.log
+    #Add rundirs for libs to work
+    rundir = Regular_Functions.get_rundir()
+    Regular_Functions.add_rundirs(rundir)
 
     log("Initializing {0} {1}".format(__product__, __version__), "INFO")
 
@@ -58,29 +60,41 @@ def initialize():
     datadir = os.path.join(rundir, 'Data')
     logdir = os.path.join(datadir, 'Logs')
 
-    #process = processing()
-
     #Set some files
-    configfile = os.path.join(datadir, 'config.ini')
-    dbasefile = os.path.join(datadir, 'Kaidame.sqlite')
+    configfile = os.path.join(datadir, '{0}.ini'.format(__product__))
+    dbasefile = os.path.join(datadir, '{0}.vdb'.format(__product__))
 
-    dbfunc = Core.Database.dbmod()
+    #Configuration
+    import Core.Config as Config
+    cfg = Config.ConfigCheck()
+    cfg.config_validate()
+
+    server_port = cfg['SERVER']['Port']
+    server_user = cfg['SERVER']['Username']
+    server_root = cfg['SERVER']['Webroot']
+    server_host = cfg['SERVER']['IP']
+    server_pass = cfg['SERVER']['Password']
+
+    debugging = cfg['DEVELOPMENT']['Debug']
+    tracing = cfg['DEVELOPMENT']['Tracing']
+
+
+    #Initialize the database
+    dbfunc = Database.dbmod()
 
     #check if arguments where passed
-    Core.Arguments.optsargs()
+    Arguments.optsargs()
 
-    debugging = True
-    tracing = True
+    #Write the config back to the system
+    cfg.config_write()
 
-    Core.Logger.Loch._debug = debugging
-    Core.Logger.Loch._trace = tracing
+
+    Logger.Loch._debug = debugging
+    Logger.Loch._trace = tracing
+
+
+    log("Connecting to database 1", "INFO")
+    dbfunc.connect()
 
     __initialized__ = True
-    #threadlock.release()
     return True
-
-
-def start():
-        initialize()
-        log("Connecting to database 1", "INFO")
-        dbfunc.connect()

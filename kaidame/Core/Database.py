@@ -7,6 +7,7 @@ import os
 def log(msg, sev):
     kaidame.log(msg, sev)
 
+
 class dbmod():
 
     def __init__(self):
