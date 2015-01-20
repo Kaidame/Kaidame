@@ -8,14 +8,14 @@ import cherrypy
 from Webconfig import WebInterface
 
 
-def initialize(options={}):
+def initialize():
 
     cherrypy.config.update({
-        'log.screen': False,
+        'log.screen': True,
         'server.thread_pool': 10,
-        'server.socket_port': options['http_port'],
-        'server.socket_host': options['http_host'],
-        'engine.autoreload_on': False,
+        'server.socket_port': kaidame.server_port,
+        'server.socket_host': kaidame.server_host,
+        'engine.autoreload.on': False,
     })
 
     conf = {
@@ -44,25 +44,24 @@ def initialize(options={}):
         }
     }
 
-    if options['http_pass'] != "":
+    if kaidame.server_pass != "":
         conf['/'].update({
             'tools.auth_basic.on': True,
             'tools.auth_basic.realm': 'Kaidame',
             'tools.auth_basic.checkpassword': cherrypy.lib.auth_basic.checkpassword_dict(
-                {options['http_user']: options['http_pass']})
+                {kaidame.server_user: kaidame.server_pass})
         })
 
     # Prevent time-outs
     cherrypy.engine.timeout_monitor.unsubscribe()
-    cherrypy.tree.mount(WebInterface(), options['http_root'], config=conf)
+    cherrypy.tree.mount(WebInterface(), kaidame.server_root, config=conf)
 
-    #cherrypy.engine.autoreload.on = True
+    cherrypy.engine.autoreload.on = True
 
     try:
-        cherrypy.process.servers.check_port(options['http_host'], options['http_port'])
+        cherrypy.process.servers.check_port(kaidame.server_host, kaidame.server_port)
         cherrypy.server.start()
     except IOError:
-        print 'Failed to start on port: %i. Is something else running?' % (options['http_port'])
+        print 'Failed to start on port: {0}. Is something else running?'.format(kaidame.server_port)
         sys.exit(0)
-    print "Server Booted"
-    cherrypy.server.wait()
+    #cherrypy.server.wait()

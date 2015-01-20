@@ -9,6 +9,6 @@ SUPPLIES = "extended"
 DATADUMP = True
 DATADUMPLINK = "http://anidb.net/api/anime-titles.xml.gz"
 DATADUMPLIMIT = "24H"
-
+DOWNLOAD = "NO" (NZB, TORRENT)
 import kaidame.Lib.requests
 

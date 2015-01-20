@@ -28,8 +28,12 @@ class Proc():
     def kill(self, namel):
         self.p.join(name=namel)
 
+<<<<<<< Updated upstream
 
 def proces(targ, argse, joins, namel, lock=False):
+=======
+def process(targ, argse, joins, namel):
+>>>>>>> Stashed changes
     p = Process(target=targ, args=argse, name=namel)
     if lock:
         pass

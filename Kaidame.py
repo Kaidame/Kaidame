@@ -15,14 +15,9 @@ if __name__ == '__main__':
     init = kaidame.initialize()
     if init == True:
         kaidame.log("Booting webserver", "INFO")
+        #Boot the webserver
         import kaidame.Core.Webserver as webStart
-        webStart.initialize({
-            'http_port': kaidame.server_port,
-            'http_host': kaidame.server_host,
-            'http_root': kaidame.server_root,
-            'http_user': kaidame.server_user,
-            'http_pass': kaidame.server_pass,
-        })
+        webStart.initialize()
 
 
 

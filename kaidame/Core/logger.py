@@ -19,8 +19,8 @@ class Loch(object):
         self.loggername = __name__  # "TraceLogger"
         self.level = 9
         self.logfilelocation = ""
-        self._debug = True
-        self._trace = True
+        self._debug = False
+        self._trace = False
         self.thread = ''
         self.init = False
 
@@ -53,7 +53,7 @@ class Loch(object):
             logger.addHandler(handler)
             logger.addHandler(streamhandler)
 
-            self.log("Logging Initialized!", "INFO")
+            self.log("Logging Initialized!", "DEBUG")
             self.init = True
 
     def log(self, msg, lvl):

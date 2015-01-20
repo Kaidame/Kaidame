@@ -1,20 +1,17 @@
 import kaidame
-from kaidame import *
-from kaidame.Core import *
 
 
 def optsargs():
-    kaidame.log("Checking boot time arguments", "INFO")
+    kaidame.log("Checking boot time arguments", "DEBUG")
     from optparse import OptionParser
 
     p = OptionParser()
-    p.add_option('-i', '--ip', default=None,
-                 dest='ip', help="Specify IP required")
-    p.add_option('-t', '--type', default=None,
-                 dest='type', help="What site to check against:VirusTotal, AbuseIP, robtex, IPLookup or LDAP")
-    p.add_option('-p', '--packet', default=None,
-                 dest='intrusion', help="Intrusion Packet Decoder")
-    p.add_option('-c', '--computer', default=None,
-                 dest='pcname', help='Computername to lookup')
+    p.add_option('-d', '--daemon', action="store_true", dest='daemon', help="Run the server as a daemon")
+    p.add_option('-q', '--quiet', action="store_true", dest='quiet', help="Don't log to console")
+    p.add_option('-p', '--port', dest='port', default=None, help="Force webinterface to listen on this port")
+    p.add_option('--develop', action="store_true", dest='develop', help="Show development messages")
+    p.add_option('--nobrowser', action="store_true", dest='nobrowser', help="Don't start your browser")
+    p.add_option('--datadir', dest='datadir', default=None, help="Path to the data directory")
+    p.add_option('--config', dest='config', default=None, help="alternative Path to config.ini file")
 
     kaidame.options, kaidame.args = p.parse_args()

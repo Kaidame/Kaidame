@@ -9,6 +9,7 @@ import Core.Logger as Logger
 import Core.Regular_Functions as Regular_Functions
 import Core.Database as Database
 import Core.Arguments as Arguments
+import copy
 import sys
 import os
 
@@ -18,10 +19,10 @@ import os
 #Processing = Processing.Processing()
 #Processing.name = __product__
 #True False statements
-__initialized__ = debugging = update = tracing = False
+__initialized__ = update = False
 #Empty string statements
 configfile = rundir = logdir = datadir = dbasefile = dbfunc = server_port = server_user = server_root = server_host = \
-    server_pass = ''
+    server_pass = server_style = debugging = tracing = developmentmode = moduledir = ''
 #Empty lists
 options = args = process = []
 #Empty functions
@@ -32,7 +33,6 @@ try:
     if not logwriter in globals():
         pass
 except NameError:
-    print "log init"
     logwriter = Logger.Loch()
     logwriter.initialize()
 
@@ -43,8 +43,16 @@ def initialize():
 
     #Set all variables needed as global variables
     global __initialized__, debugging, rundir, options, args, datadir, logdir, dbasefile, configfile, dbfunc, \
-        tracing, process, __product__, __version__, logwriter, webserver, cherrypy, \
-        server_port, server_user, server_root, server_host, server_pass
+        tracing, process, __product__, __version__, logwriter, webserver, cherrypy, config, cfg, \
+        server_port, server_user, server_root, server_host, server_pass, server_style, DataBase, developmentmode, \
+        moduledir
+
+    #check if arguments where passed
+    Arguments.optsargs()
+
+    #If set to true a lot more logging will happen
+    #TODO setup a seperate webserver for development mode purposes
+    developmentmode = True
 
     #add to the sys path for convenience
 
@@ -59,41 +67,50 @@ def initialize():
     #Set some directories
     datadir = os.path.join(rundir, 'Data')
     logdir = os.path.join(datadir, 'Logs')
+    moduledir = os.path.join(rundir, os.path.join('kaidame', 'Modules'))
 
     #Set some files
     configfile = os.path.join(datadir, '{0}.ini'.format(__product__))
     dbasefile = os.path.join(datadir, '{0}.vdb'.format(__product__))
 
     #Configuration
-    import Core.Config as Config
+    import Core.Conf as Config
     cfg = Config.ConfigCheck()
-    cfg.config_validate()
+    cfg.find_module()
 
-    server_port = cfg['SERVER']['Port']
-    server_user = cfg['SERVER']['Username']
-    server_root = cfg['SERVER']['Webroot']
-    server_host = cfg['SERVER']['IP']
-    server_pass = cfg['SERVER']['Password']
+    cfg.CheckSec('Server')
+    server_host = cfg.check_str('Server', 'IP', '0.0.0.0')
+    server_port = cfg.check_int('Server', 'Port', 7000)
+    server_user = cfg.check_str('Server', 'Username', '')
+    server_pass = cfg.check_str('Server', 'Password', '')
+    server_root = cfg.check_str('Server', 'Webroot', '/')
+    server_style = cfg.check_str('Server', 'Style', 'default')
 
-    debugging = cfg['DEVELOPMENT']['Debug']
-    tracing = cfg['DEVELOPMENT']['Tracing']
+    cfg.CheckSec('Data')
+    DataBase = cfg.check_str('Data', 'Database', 'Kaidame.vdb')
 
+    if not (developmentmode is True or options.develop is True):
+        cfg.CheckSec('Development')
+        Logger.Loch._debug = cfg.check_bool('Development', 'Debug', False)
+        Logger.Loch._trace = cfg.check_bool('Development', 'Tracing', False)
+        Logger.Loch.init = False
+        logwriter.initialize()
+    else:
+        Logger.Loch._debug = True
+        Logger.Loch._trace = True
+        Logger.Loch.init = False
+        logwriter.initialize()
+
+    #cfg.config_validate()
+    cfg.config_write()
+
+    cfg.check_str('Server', 'IP', 'localhost', cset=True)
+    cfg.config_write()
 
     #Initialize the database
     dbfunc = Database.dbmod()
 
-    #check if arguments where passed
-    Arguments.optsargs()
-
-    #Write the config back to the system
-    cfg.config_write()
-
-
-    Logger.Loch._debug = debugging
-    Logger.Loch._trace = tracing
-
-
-    log("Connecting to database 1", "INFO")
+    log("Connecting to database {0}".format(dbasefile), "INFO")
     dbfunc.connect()
 
     __initialized__ = True

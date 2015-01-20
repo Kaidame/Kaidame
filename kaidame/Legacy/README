@@ -1,0 +1,5 @@
+This folder contains old core files, config files and libraries that are no longer needed or have been rebuid from
+scratch.
+
+Some scripts just didn't work, so we have to make do with out own.
+This directory should not be here, but if you do see it, you can safely delete it.
