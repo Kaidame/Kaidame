@@ -3,7 +3,7 @@
 # from kaidame.Core import *
 # import re
 import os
-
+import json
 
 #Class for parsing filenames, to see what is what.
 class walker():

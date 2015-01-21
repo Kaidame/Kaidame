@@ -13,6 +13,12 @@ import copy
 import sys
 import os
 
+########################
+#DEVMODE SWITCH
+########################
+developmentmode = True
+########################
+
 #global imports
 #import Processing
 
@@ -22,7 +28,7 @@ import os
 __initialized__ = update = False
 #Empty string statements
 configfile = rundir = logdir = datadir = dbasefile = dbfunc = server_port = server_user = server_root = server_host = \
-    server_pass = server_style = debugging = tracing = developmentmode = moduledir = ''
+    server_pass = server_style = debugging = tracing = moduledir = ''
 #Empty lists
 options = args = process = []
 #Empty functions
@@ -34,6 +40,9 @@ try:
         pass
 except NameError:
     logwriter = Logger.Loch()
+    if developmentmode is True:
+        logwriter._debug = True
+        logwriter._trace = True
     logwriter.initialize()
 
 def log(msg, inf):
@@ -45,14 +54,14 @@ def initialize():
     global __initialized__, debugging, rundir, options, args, datadir, logdir, dbasefile, configfile, dbfunc, \
         tracing, process, __product__, __version__, logwriter, webserver, cherrypy, config, cfg, \
         server_port, server_user, server_root, server_host, server_pass, server_style, DataBase, developmentmode, \
-        moduledir
+        moduledir, logwriter
 
     #check if arguments where passed
     Arguments.optsargs()
 
     #If set to true a lot more logging will happen
     #TODO setup a seperate webserver for development mode purposes
-    developmentmode = True
+    developmentmode = developmentmode
 
     #add to the sys path for convenience
 
@@ -89,22 +98,8 @@ def initialize():
     cfg.CheckSec('Data')
     DataBase = cfg.check_str('Data', 'Database', 'Kaidame.vdb')
 
-    if not (developmentmode is True or options.develop is True):
-        cfg.CheckSec('Development')
-        Logger.Loch._debug = cfg.check_bool('Development', 'Debug', False)
-        Logger.Loch._trace = cfg.check_bool('Development', 'Tracing', False)
-        Logger.Loch.init = False
-        logwriter.initialize()
-    else:
-        Logger.Loch._debug = True
-        Logger.Loch._trace = True
-        Logger.Loch.init = False
-        logwriter.initialize()
 
     #cfg.config_validate()
-    cfg.config_write()
-
-    cfg.check_str('Server', 'IP', 'localhost', cset=True)
     cfg.config_write()
 
     #Initialize the database

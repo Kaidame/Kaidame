@@ -23,12 +23,15 @@ class Loch(object):
         self._trace = False
         self.thread = ''
         self.init = False
+        self.handler = ''
+        self.logger = ''
+        self.streamhandler = ''
 
     def initialize(self):
         if not self.init:
             logging.addLevelName(9, "TRACE")
-            logger = logging.getLogger(self.loggername)
-            logger.setLevel(self.level)
+            self.logger = logging.getLogger(self.loggername)
+            self.logger.setLevel(self.level)
 
             def trace(self, message, *args, **kws):
                 self._log(9, message, args, **kws)
@@ -39,26 +42,27 @@ class Loch(object):
 
             self.logfilelocation = os.path.join(self.logdir, self.filename)
             formatter = logging.Formatter('%(asctime)s : %(levelname)-5s\t%(message)s', '%d-%b-%Y %H:%M:%S')
-            handler = handlers.RotatingFileHandler(self.logfilelocation, maxBytes=self.maxsize, backupCount=self.maxfiles, )
-            handler.setLevel(self.level)
+            self.handler = handlers.RotatingFileHandler(self.logfilelocation, maxBytes=self.maxsize, backupCount=self.maxfiles, )
+            self.handler.setLevel(self.level)
 
-            streamhandler = logging.StreamHandler()
-            streamhandler.setLevel(logging.INFO)
+            self.streamhandler = logging.StreamHandler()
+            self.streamhandler.setLevel(logging.INFO)
             if self._debug:
-                streamhandler.setLevel(10)
+                self.streamhandler.setLevel(10)
             if self._trace:
-                streamhandler.setLevel(9)
-            streamhandler.setFormatter(formatter)
-            handler.setFormatter(formatter)
-            logger.addHandler(handler)
-            logger.addHandler(streamhandler)
+                self.streamhandler.setLevel(9)
+            self.streamhandler.setFormatter(formatter)
+            self.handler.setFormatter(formatter)
+            self.logger.addHandler(self.handler)
+            self.logger.addHandler(self.streamhandler)
 
             self.log("Logging Initialized!", "DEBUG")
             self.init = True
 
+
     def log(self, msg, lvl):
 
-        logger = logging.getLogger(self.loggername)
+        self.logger = logging.getLogger(self.loggername)
         if multiprocessing.current_process().name == "Main":
             self.thread = 'LOGGER'
             mps = True
@@ -77,21 +81,21 @@ class Loch(object):
         msg = '{0}\t{1}'.format(self.thread, msg)
 
         if lvl == 'DEBUG' and self._debug:
-            logger.debug(msg)
+            self.logger.debug(msg)
         elif lvl == 'INFO':
-            logger.info(msg)
+            self.logger.info(msg)
         elif lvl == 'WARN':
-            logger.warn(msg)
+            self.logger.warn(msg)
         elif lvl == 'ERROR':
-            logger.error(msg)
+            self.logger.error(msg)
         elif lvl == 'TRACE' and self._trace:
-            logger.trace(msg)
+            self.logger.trace(msg)
         elif lvl == 'DEBUG':
             pass
         elif lvl == 'TRACE':
             pass
         else:
-            logger.error("***UNKNOWN*** {0}".format(msg))
+            self.logger.error("***UNKNOWN*** {0}".format(msg))
 
 #Initialize logging on it's own
 # logwriter = Loch()
