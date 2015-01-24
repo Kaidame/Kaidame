@@ -7,7 +7,6 @@ __version__ = '0.0.1'
 #Imports from the module itself
 import Core.Logger as Logger
 import Core.Regular_Functions as Regular_Functions
-import Core.Database as Database
 import Core.Arguments as Arguments
 import copy
 import sys
@@ -28,7 +27,7 @@ developmentmode = True
 __initialized__ = update = False
 #Empty string statements
 configfile = rundir = logdir = datadir = dbasefile = dbfunc = server_port = server_user = server_root = server_host = \
-    server_pass = server_style = debugging = tracing = moduledir = ''
+    server_pass = server_style = debugging = tracing = moduledir = cachedir = ''
 #Empty lists
 options = args = process = []
 #Empty functions
@@ -54,7 +53,7 @@ def initialize():
     global __initialized__, debugging, rundir, options, args, datadir, logdir, dbasefile, configfile, dbfunc, \
         tracing, process, __product__, __version__, logwriter, webserver, cherrypy, config, cfg, \
         server_port, server_user, server_root, server_host, server_pass, server_style, DataBase, developmentmode, \
-        moduledir, logwriter
+        moduledir, logwriter, cachedir
 
     #check if arguments where passed
     Arguments.optsargs()
@@ -77,6 +76,7 @@ def initialize():
     datadir = os.path.join(rundir, 'Data')
     logdir = os.path.join(datadir, 'Logs')
     moduledir = os.path.join(rundir, os.path.join('kaidame', 'Modules'))
+    cachedir = os.path.join(rundir, os.path.join('kaidame', 'Cache'))
 
     #Set some files
     configfile = os.path.join(datadir, '{0}.ini'.format(__product__))
@@ -103,10 +103,9 @@ def initialize():
     cfg.config_write()
 
     #Initialize the database
-    dbfunc = Database.dbmod()
-
     log("Connecting to database {0}".format(dbasefile), "INFO")
-    dbfunc.connect()
+    import Core.Database as Database
+
 
     __initialized__ = True
     return True

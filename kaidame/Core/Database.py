@@ -1,41 +1,58 @@
 import kaidame
-from kaidame import *
-from kaidame.Core import *
-import sqlite3
-import os
+import sqlalchemy
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import sessionmaker
 
-def log(msg, sev):
-    kaidame.log(msg, sev)
+engine = sqlalchemy.create_engine('sqlite:///{0}'.format(kaidame.dbasefile), echo=True)
+Session = sessionmaker(bind=engine)
+Base = declarative_base()
+Session.configure(bind=engine)
+
+class User(Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    fullname = Column(String)
+    password = Column(String)
+
+    def __repr__(self):
+        return "<User(name='%s', fullname='%s', password='%s')>" % (
+                         self.name, self.fullname, self.password)
+
+class AnimeTitles(Base):
+    __tablename__ = 'animetitles'
+
+    id = Column(Integer, primary_key=True)
+    main = Column(String)
+    mainshort = Column(String)
+    title = Column(String)
+    titleshort = Column(String)
+    officialen = Column(String)
+    officialjp = Column(String)
+    imdbid = Column(String)
+    tvrageid = Column(String)
+    anidbid = Column(String)
+    malid = Column(String)
+    wikilink = Column(String)
+
+    def __repr__(self):
+        return"<AnimeTitles(main='%s',mainshort='%s', title='%s',titleshort='%s', officialen='%s', officialjp='%s'," \
+              " imdbid='%s', tvrageid='%s', anidbid='%s', malid='%s', wikilink='%s')>" % (
+            self.main, self.mainshort, self.title, self.titleshort, self.officialen, self.officialjp, self.imdbid,
+            self.tvrageid, self.anidbid, self.malid, self.wikilink)
 
 
-class dbmod():
+Base.metadata.create_all(engine)
 
-    def __init__(self):
-        self.dbfile = kaidame.dbasefile
-        log("Starting up Database", "INFO")
-        self.conn = None
-        self.c = None
+#ed_user = User(name='ed', fullname='Ed Jones', password='edspassword')
+#session.add(ed_user)
+#session.commit
 
-    def connect(self):
-        if not os.path.exists(self.dbfile):
-            log("Creating Database file", "INFO")
-            self.conn = sqlite3.connect(self.dbfile)
-            self.c = self.conn.cursor()
-            self.setup()
-        #log("Connecting to Database", "INFO")
-        self.conn = sqlite3.connect(self.dbfile, check_same_thread=False)
-        self.c = self.conn.cursor()
-
-    def setup(self):
-        self.connect()
-        log("Installating tables.", "DEBUG")
-        try:
-            self.c.execute('CREATE TABLE version(versionID TEXT UNIQUE, versionNR TEXT)')
-            log("Setting up version information", "DEBUG")
-        except sqlite3.OperationalError:
-            try:
-                self.c.execute("INSERT INTO version VALUES('1',{0})".format(kaidame.__version__))
-            except:
-                log("Unknown error with Database, please contact us!", "CRITICAL")
-        finally:
-            self.c.execute("SELECT * FROM version WHERE versionID=?", '1')
+# for name, fullname in session.query(User.name, User.fullname):
+#   print name, fullname
+# ed Ed Jones
+# wendy Wendy Williams
+# mary Mary Contrary
+# fred Fred Flinstone
