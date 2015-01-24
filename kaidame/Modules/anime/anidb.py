@@ -8,7 +8,9 @@ import urllib
 import kaidame
 import os
 import gzip
+import kaidame.Core.Database as DB
 import sys
+import datetime
 from bs4 import BeautifulSoup
 
 REQUIRES = "showtitle"
@@ -20,12 +22,24 @@ DATADESTINATION = os.path.join(kaidame.cachedir, "anime-titles.xml")
 DATADUMPLIMIT = "24H"
 DOWNLOAD = "NO" #(NZB, TORRENT)
 
+# # query from a class
+# session.query(User).filter_by(name='ed').all()
+#
+# # query with multiple classes, returns tuples
+# session.query(User, Address).join('addresses').filter_by(name='ed').all()
+#
+# # query using orm-enabled descriptors
+# session.query(User.name, User.fullname).all()
+
 
 def getdata():
     testfile = urllib.URLopener()
     testfile.retrieve(DATADUMPLINK, DATASOURCE)
     kaidame.log("Downloading anidb Database to {0}".format(DATASOURCE), "INFO")
-    #TODO: Set 24hr timeout
+    timeout = DB.Options(anidbsync=datetime.datetime.utcnow())
+    session = DB.Session()
+    session.add(timeout)
+    session.commit()
 
 
 def extract():

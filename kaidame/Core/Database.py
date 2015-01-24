@@ -1,7 +1,7 @@
 import kaidame
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, DateTime, and, or_
 from sqlalchemy.orm import sessionmaker
 
 engine = sqlalchemy.create_engine('sqlite:///{0}'.format(kaidame.dbasefile), echo=True)
@@ -20,6 +20,18 @@ class User(Base):
     def __repr__(self):
         return "<User(name='%s', fullname='%s', password='%s')>" % (
                          self.name, self.fullname, self.password)
+
+
+class Options(Base):
+    __tablename__ = 'options'
+
+    id = Column(Integer, primary_key=True)
+    anidbsync = Column(DateTime)
+
+    def __repr__(self):
+        return "<Options(anidbsync='%s')>" % (
+                         self.anidbsync)
+
 
 class AnimeTitles(Base):
     __tablename__ = 'animetitles'

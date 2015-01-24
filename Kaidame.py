@@ -26,5 +26,5 @@ if __name__ == '__main__':
         import kaidame.Modules.Anime.anidb as anidb
         #anidb.getdata()
         #anidb.extract()
-        anidb.list_import()
+        #anidb.list_import()
 
