@@ -11,6 +11,7 @@ import Core.Arguments as Arguments
 import copy
 import sys
 import os
+from apscheduler.schedulers.background import BackgroundScheduler
 
 ########################
 #DEVMODE SWITCH
@@ -53,7 +54,9 @@ def initialize():
     global __initialized__, debugging, rundir, options, args, datadir, logdir, dbasefile, configfile, dbfunc, \
         tracing, process, __product__, __version__, logwriter, webserver, cherrypy, config, cfg, \
         server_port, server_user, server_root, server_host, server_pass, server_style, DataBase, developmentmode, \
-        moduledir, logwriter, cachedir
+        moduledir, logwriter, cachedir, scheduler
+
+    scheduler = BackgroundScheduler()
 
     #check if arguments where passed
     Arguments.optsargs()
@@ -106,6 +109,10 @@ def initialize():
     log("Connecting to database {0}".format(dbasefile), "INFO")
     import Core.Database as Database
 
-
+    scheduler.start()
     __initialized__ = True
     return True
+
+def start():
+    job = scheduler.add_job(myfunc, 'interval', minutes=2)
+    scheduler.add_job(kaidame.Modules.Anime.)

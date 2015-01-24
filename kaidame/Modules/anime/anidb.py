@@ -10,7 +10,7 @@ import os
 import gzip
 import kaidame.Core.Database as DB
 import sys
-import datetime
+from datetime import datetime
 from bs4 import BeautifulSoup
 
 REQUIRES = "showtitle"
@@ -22,6 +22,7 @@ DATADESTINATION = os.path.join(kaidame.cachedir, "anime-titles.xml")
 DATADUMPLIMIT = "24H"
 DOWNLOAD = "NO" #(NZB, TORRENT)
 
+session = DB.Session()
 # # query from a class
 # session.query(User).filter_by(name='ed').all()
 #
@@ -33,10 +34,10 @@ DOWNLOAD = "NO" #(NZB, TORRENT)
 
 
 def getdata():
-    testfile = urllib.URLopener()
-    testfile.retrieve(DATADUMPLINK, DATASOURCE)
+    titlefile = urllib.URLopener()
+    titlefile.retrieve(DATADUMPLINK, DATASOURCE)
     kaidame.log("Downloading anidb Database to {0}".format(DATASOURCE), "INFO")
-    timeout = DB.Options(anidbsync=datetime.datetime.utcnow())
+    timeout = DB.Options(anidbsync=datetime.utcnow())
     session = DB.Session()
     session.add(timeout)
     session.commit()
@@ -49,6 +50,18 @@ def extract():
     outF.write(inF.read())
     inF.close()
     outF.close()
+
+
+def check_valid():
+    tst = session.query(DB.Options).filter_by(id=1).first()
+    dife = int((datetime.utcnow() - tst.anidbsync).total_seconds() // 3600)
+    print dife
+    if dife >= 24:
+        getdata()
+        extract()
+    else:
+        kaidame.log("Download cap active, not downloading", "INFO")
+
 
 #ed_user = User(name='ed', fullname='Ed Jones', password='edspassword')
 

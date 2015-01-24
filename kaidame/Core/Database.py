@@ -1,13 +1,19 @@
 import kaidame
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, DateTime, and, or_
+from sqlalchemy import Column, Integer, String, DateTime, and_, or_
 from sqlalchemy.orm import sessionmaker
 
-engine = sqlalchemy.create_engine('sqlite:///{0}'.format(kaidame.dbasefile), echo=True)
+if kaidame.developmentmode:
+    verbose = True
+else:
+    verbose = False
+
+engine = sqlalchemy.create_engine('sqlite:///{0}'.format(kaidame.dbasefile), echo=verbose)
 Session = sessionmaker(bind=engine)
 Base = declarative_base()
 Session.configure(bind=engine)
+
 
 class User(Base):
     __tablename__ = 'users'

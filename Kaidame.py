@@ -24,6 +24,7 @@ if __name__ == '__main__':
         #parsert.searchsite("Durarara", "Anime")
 
         import kaidame.Modules.Anime.anidb as anidb
+        anidb.check_valid()
         #anidb.getdata()
         #anidb.extract()
         #anidb.list_import()
