@@ -18,13 +18,12 @@ if __name__ == '__main__':
         #Boot the webserver
         import kaidame.Core.Webserver as webStart
         webStart.initialize()
-
+        kaidame.start()
         #import kaidame.Modules.Anime.nyaa as nyaa
         #parsert = nyaa.SiteLoader()
         #parsert.searchsite("Durarara", "Anime")
 
         import kaidame.Modules.Anime.anidb as anidb
-        anidb.check_valid()
         #anidb.getdata()
         #anidb.extract()
         #anidb.list_import()

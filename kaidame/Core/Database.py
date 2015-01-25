@@ -1,7 +1,7 @@
 import kaidame
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, DateTime, and_, or_
+from sqlalchemy import Column, Integer, String, DateTime, and_, or_, exists
 from sqlalchemy.orm import sessionmaker
 
 if kaidame.developmentmode:
@@ -63,6 +63,7 @@ class AnimeTitles(Base):
 
 
 Base.metadata.create_all(engine)
+
 
 #ed_user = User(name='ed', fullname='Ed Jones', password='edspassword')
 #session.add(ed_user)

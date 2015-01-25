@@ -118,3 +118,6 @@ class ConfigCheck():
                     section = os.path.basename(os.path.normpath(subdirname))
                     filenameq, fileextension = os.path.splitext(filename)
                     self.check_bool(section, filenameq, False)
+                    modval = self.config.getboolean(section, filenameq)
+                    if modval:
+                        kaidame.modules.update({filenameq: '{0}.{1}'.format(section, filenameq)})

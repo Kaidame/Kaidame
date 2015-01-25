@@ -19,7 +19,8 @@ DATADUMP = True
 DATADUMPLINK = "http://anidb.net/api/anime-titles.xml.gz"
 DATASOURCE = os.path.join(kaidame.cachedir, "anime-titles.xml.gz")
 DATADESTINATION = os.path.join(kaidame.cachedir, "anime-titles.xml")
-DATADUMPLIMIT = "24H"
+DATADUMPLIMIT = 24
+SCHEDULE = 15
 DOWNLOAD = "NO" #(NZB, TORRENT)
 
 session = DB.Session()
@@ -37,10 +38,6 @@ def getdata():
     titlefile = urllib.URLopener()
     titlefile.retrieve(DATADUMPLINK, DATASOURCE)
     kaidame.log("Downloading anidb Database to {0}".format(DATASOURCE), "INFO")
-    timeout = DB.Options(anidbsync=datetime.utcnow())
-    session = DB.Session()
-    session.add(timeout)
-    session.commit()
 
 
 def extract():
@@ -52,15 +49,28 @@ def extract():
     outF.close()
 
 
-def check_valid():
-    tst = session.query(DB.Options).filter_by(id=1).first()
-    dife = int((datetime.utcnow() - tst.anidbsync).total_seconds() // 3600)
-    print dife
-    if dife >= 24:
+def start():
+    ret = session.query(DB.exists().where(DB.Options.id == 1)).scalar()
+    if not ret:
+        kaidame.log("No database downloaded yet, downloading", "INFO")
+        timeout = DB.Options(anidbsync=datetime.utcnow())
+        session.add(timeout)
         getdata()
         extract()
     else:
-        kaidame.log("Download cap active, not downloading", "INFO")
+        dled = session.query(DB.Options).filter_by(id=1).first()
+        dife = int((datetime.utcnow() - dled.anidbsync).total_seconds() // 3600)
+        if dife >= DATADUMPLIMIT:
+            getdata()
+            dled.anidbsync = datetime.utcnow()
+            session.commit()
+            extract()
+        else:
+            kaidame.log("Download cap active, not downloading", "INFO")
+
+
+
+
 
 
 #ed_user = User(name='ed', fullname='Ed Jones', password='edspassword')
