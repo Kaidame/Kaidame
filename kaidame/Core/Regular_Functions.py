@@ -4,6 +4,7 @@ from kaidame.Core import *
 import sys
 import os
 
+
 #New format logging IMHO a better practice
 def log(message, level):
     if str(level).lower() == 'debug':
@@ -37,12 +38,18 @@ def get_rundir():
 def get_update():
     pass
 
+
 def add_rundirs(rundir):
     appdir = os.path.join(rundir, "kaidame")
     sys.path.append(rundir)
     sys.path.append(appdir)
     sys.path.append(os.path.join(appdir, "Lib"))
     sys.path.append(os.path.join(os.path.join(appdir, "Lib"), "cherrypy"))
+
+
+def check_dir(loc):
+    if not os.path.exists(loc):
+        os.makedirs(loc)
 
 
 def quit():

@@ -2,7 +2,6 @@ __author__ = 'Dorbian'
 import os
 import sys
 import kaidame
-#import kaidame.Lib.cherrypy as cherrypy
 import cherrypy
 
 from Webconfig import WebInterface
@@ -22,23 +21,23 @@ def initialize():
         '/': {
             'tools.staticdir.root': os.path.join(kaidame.rundir, os.path.join("kaidame", "Webdata"))
         },
-        '/interfaces':{
+        '/interfaces': {
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "interfaces"
         },
-        '/images':{
+        '/images': {
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "images"
         },
-        '/css':{
+        '/css': {
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "css"
         },
-        '/js':{
+        '/js': {
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "js"
         },
-        '/favicon.ico':{
+        '/favicon.ico': {
             'tools.staticfile.on': True,
             'tools.staticfile.filename': "images/favicon.ico"
         }

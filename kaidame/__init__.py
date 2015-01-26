@@ -6,12 +6,14 @@ __version__ = '0.0.1'
 
 #Imports from the module itself
 import Core.Logger as Logger
-import Core.Regular_Functions as Regular_Functions
+import Core.Regular_Functions as RF
 import Core.Arguments as Arguments
 import copy
 import sys
 import os
 import threading
+import Modules.Collect
+import Modules.Download
 import datetime
 
 ########################
@@ -23,7 +25,7 @@ developmentmode = True
 #Predefine namespaces
 #------------------------------------------------------------------
 #Boolean statements
-__initialized__ = update = False
+__initialized__ = update = setup_completed = False
 #Empty string statements
 configfile = rundir = logdir = datadir = dbasefile = dbfunc = server_port = server_user = server_root = server_host = \
     server_pass = server_style = debugging = tracing = moduledir = cachedir = ''
@@ -32,6 +34,7 @@ options = args = process = []
 #Empty dicts
 tmpd = modules = dict()
 thread_lock = threading.Lock()
+threading.currentThread().name = __product__
 #------------------------------------------------------------------
 try:
     if not logwriter in globals():
@@ -54,7 +57,7 @@ def initialize():
         global __initialized__, debugging, rundir, options, args, datadir, logdir, dbasefile, configfile, dbfunc, \
             tracing, process, __product__, __version__, logwriter, webserver, cherrypy, config, cfg, \
             server_port, server_user, server_root, server_host, server_pass, server_style, DataBase, developmentmode, \
-            moduledir, logwriter, cachedir, scheduler, modules
+            moduledir, logwriter, cachedir, scheduler, modules, setup_completed
 
         #check if arguments where passed
         #------------------------------------------------------------------
@@ -72,8 +75,8 @@ def initialize():
 
         #Add rundirs for libs to work
         #------------------------------------------------------------------
-        rundir = Regular_Functions.get_rundir()
-        Regular_Functions.add_rundirs(rundir)
+        rundir = RF.get_rundir()
+        RF.add_rundirs(rundir)
 
         log("Initializing {0} {1}".format(__product__, __version__), "INFO")
 
@@ -85,6 +88,9 @@ def initialize():
         configfile = os.path.join(datadir, '{0}.ini'.format(__product__))
         dbasefile = os.path.join(datadir, '{0}.vdb'.format(__product__))
 
+        RF.check_dir(datadir)
+        RF.check_dir(cachedir)
+
         #Load scheduler
         #------------------------------------------------------------------
         from apscheduler.scheduler import Scheduler
@@ -95,6 +101,8 @@ def initialize():
         #------------------------------------------------------------------
         import Core.Conf as Config
         cfg = Config.ConfigCheck()
+
+        #Find dynamic modules fist, then define the rest.
         cfg.find_module()
 
         cfg.CheckSec('Server')
@@ -108,14 +116,17 @@ def initialize():
         cfg.CheckSec('Data')
         DataBase = cfg.check_str('Data', 'Database', 'Kaidame.vdb')
 
+        cfg.CheckSec('General')
+        setup_completed = cfg.check_bool('General', 'Setup_Complete', False)
+
         cfg.config_write()
 
         #Import modules
         #------------------------------------------------------------------
-        for key in modules:
-            tmp = 'import Modules.{1} as {0}'.format(key, modules[key])
-            exec tmp
-            log('Imported {0} from Modules.{1}'.format(key, modules[key]), 'DEBUG')
+        # for key in modules:
+        #     tmp = 'import Modules.{1} as {0}'.format(key, modules[key])
+        #     exec tmp
+        #     log('Imported {0} from Modules.{1}'.format(key, modules[key]), 'DEBUG')
 
         #Initialize the database
         #------------------------------------------------------------------
@@ -133,20 +144,30 @@ def initialize():
 
 
 def start():
-    try:
-        return sys.modules['Modules.Anime.anidb']
-    except KeyError:
-        print "Nope"
     for key in modules:
-        tmpt = 'schedulet = int(Anime.{0}.SCHEDULE)'.format(key)
+        tmpt = 'import Modules.{1}.{0} as {0}'.format(key, modules[key]['Section'])
         exec tmpt
-        tmps = 'scheduler.add_interval_job(Anime.{0}.start, minutes=schedulet, start_date=starttime+datetime.timedelta(minutes=1))'.format(key)
-        exec tmps
+        if modules[key]['Section'] == 'Collect':
+            starttime = datetime.datetime.now()
+            tmpt = 'schedulet = int(Modules.{0}.{1}.SCHEDULE)'.format(modules[key]['Section'], key)
+            tmps = 'scheduler.add_interval_job(Modules.{1}.{0}.start, minutes=schedulet, start_date=starttime+datetime.timedelta(minutes=1))'.format(key, modules[key]['Section'])
+            exec tmpt
+            exec tmps
+            log("Loaded Module: {0}".format(key), "INFO")
     for job in scheduler.get_jobs():
         print job
+    # try:
+    #     return sys.modules['Modules.Anime.anidb']
+    # except KeyError:
+    #     print "Nope"
+    # for key in modules:
+    #
+    #     exec tmps
+    # for job in scheduler.get_jobs():
+    #     print job
 
 
-def add_module(varname, conts):
+def add_names(varname, conts):
     with thread_lock:
         tmpvars = "{0} = ''".format(varname)
         tmpglob = 'global {0}'.format(varname)

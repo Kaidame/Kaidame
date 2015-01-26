@@ -102,22 +102,27 @@ class ConfigCheck():
         if self.logs:
             kaidame.log('* Wrote Config: {0}'.format(kaidame.configfile), 'DEBUG')
 
-    ##Custom Kaidame Addition:
-    ##Check for files in the module dir and subdirs, and add them to the config file if needed.
+    #Custom Kaidame Addition:
+    #Check for files in the module dir and subdirs, and add them to the config file if needed.
     def find_module(self):
         for dirname, dirnames, filenames in os.walk(kaidame.moduledir):
-        # print path to all subdirectories first.
+             # print path to all subdirectories first.
             for subdirname in dirnames:
                 section = os.path.basename(os.path.normpath(subdirname))
+                location = os.path.join(kaidame.moduledir, subdirname)
                 self.CheckSec(section)
 
-            for filename in filenames:
-                if '__init__.py' in filename:
-                    pass
-                else:
-                    section = os.path.basename(os.path.normpath(subdirname))
-                    filenameq, fileextension = os.path.splitext(filename)
-                    self.check_bool(section, filenameq, False)
-                    modval = self.config.getboolean(section, filenameq)
-                    if modval:
-                        kaidame.modules.update({filenameq: '{0}.{1}'.format(section, filenameq)})
+                for dirname, dirnames, filenames in os.walk(location):
+                    for filename in filenames:
+                        if '__init__.py' in filename:
+                            pass
+                        else:
+                            section = os.path.basename(os.path.normpath(subdirname))
+                            filenameq, fileextension = os.path.splitext(filename)
+                            self.check_bool(section, filenameq, False)
+                            try:
+                                modval = self.config.getboolean(section, filenameq)
+                            except AttributeError:
+                                modval = False
+                            if modval:
+                                kaidame.modules.update({filenameq: {'Location': location, "Section": section}})

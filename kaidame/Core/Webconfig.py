@@ -1,5 +1,4 @@
 import kaidame
-#import kaidame.Lib.cherrypy as cherrypy
 import cherrypy
 
 import os
@@ -22,8 +21,16 @@ class WebInterface(object):
 
     def index(self):
         print "Test"
-        raise cherrypy.HTTPRedirect("home")
+        if not kaidame.setup_completed:
+            raise cherrypy.HTTPRedirect("setup")
+        else:
+            raise cherrypy.HTTPRedirect("home")
     index.exposed = True
+
+    def setup(self):
+        return"Welcome to the setup of {0}<br>" \
+              "Please follow below steps to setup the application for use.".format(kaidame.__product__)
+    setup.exposed = True
 
     def home(self):
         return "Hello world!"

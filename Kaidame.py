@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     init = kaidame.initialize()
     if init == True:
-        kaidame.log("Booting webserver", "INFO")
+        kaidame.log("Starting webserver", "INFO")
         #Boot the webserver
         import kaidame.Core.Webserver as webStart
         webStart.initialize()
@@ -23,7 +23,6 @@ if __name__ == '__main__':
         #parsert = nyaa.SiteLoader()
         #parsert.searchsite("Durarara", "Anime")
 
-        import kaidame.Modules.Anime.anidb as anidb
         #anidb.getdata()
         #anidb.extract()
         #anidb.list_import()
