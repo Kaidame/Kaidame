@@ -4,7 +4,7 @@ __author__ = 'Dorbian'
 __product__ = 'Kaidame'
 __version__ = '0.0.1'
 
-#Imports from the module itself
+# Imports from the module itself
 import Core.Logger as Logger
 import Core.Regular_Functions as RF
 import Core.Arguments as Arguments
@@ -17,25 +17,25 @@ import Modules.Download
 import datetime
 
 ########################
-#DEVMODE SWITCH
+# DEVMODE SWITCH
 ########################
 developmentmode = True
 ########################
 
-#Predefine namespaces
-#------------------------------------------------------------------
-#Boolean statements
+# Predefine namespaces
+# ------------------------------------------------------------------
+# Boolean statements
 __initialized__ = update = setup_completed = False
-#Empty string statements
+# Empty string statements
 configfile = rundir = logdir = datadir = dbasefile = dbfunc = server_port = server_user = server_root = server_host = \
     server_pass = server_style = debugging = tracing = moduledir = cachedir = ''
-#Empty lists
+# Empty lists
 options = args = process = []
-#Empty dicts
+# Empty dicts
 tmpd = modules = dict()
 thread_lock = threading.Lock()
 threading.currentThread().name = __product__
-#------------------------------------------------------------------
+# ------------------------------------------------------------------
 try:
     if not logwriter in globals():
         pass
@@ -53,34 +53,34 @@ def log(msg, inf):
 
 def initialize():
     with thread_lock:
-        #Set all variables needed as global variables
+        # Set all variables needed as global variables
         global __initialized__, debugging, rundir, options, args, datadir, logdir, dbasefile, configfile, dbfunc, \
             tracing, process, __product__, __version__, logwriter, webserver, cherrypy, config, cfg, \
             server_port, server_user, server_root, server_host, server_pass, server_style, DataBase, developmentmode, \
             moduledir, logwriter, cachedir, scheduler, modules, setup_completed
 
-        #check if arguments where passed
-        #------------------------------------------------------------------
+        # check if arguments where passed
+        # ------------------------------------------------------------------
         Arguments.optsargs()
 
-        #If set to true a lot more logging will happen
-        #------------------------------------------------------------------
-        #TODO setup a seperate webserver for development mode purposes
+        # If set to true a lot more logging will happen
+        # ------------------------------------------------------------------
+        # TODO setup a seperate webserver for development mode purposes
         developmentmode = developmentmode
 
-        #Set some statics
-        #------------------------------------------------------------------
+        # Set some statics
+        # ------------------------------------------------------------------
         __version__ = __version__
         __product__ = __product__
 
-        #Add rundirs for libs to work
-        #------------------------------------------------------------------
+        # Add rundirs for libs to work
+        # ------------------------------------------------------------------
         rundir = RF.get_rundir()
         RF.add_rundirs(rundir)
 
         log("Initializing {0} {1}".format(__product__, __version__), "INFO")
 
-        datadir = os.path.join(rundir, 'Data')
+        datadir = os.path.join(rundir, 'UserData')
         logdir = os.path.join(datadir, 'Logs')
         moduledir = os.path.join(rundir, os.path.join('kaidame', 'Modules'))
         cachedir = os.path.join(rundir, os.path.join('kaidame', 'Cache'))
@@ -91,18 +91,17 @@ def initialize():
         RF.check_dir(datadir)
         RF.check_dir(cachedir)
 
-        #Load scheduler
-        #------------------------------------------------------------------
+        # Load scheduler
+        # ------------------------------------------------------------------
         from apscheduler.scheduler import Scheduler
         scheduler = Scheduler()
 
-
-        #Configuration
-        #------------------------------------------------------------------
+        # Configuration
+        # ------------------------------------------------------------------
         import Core.Conf as Config
         cfg = Config.ConfigCheck()
 
-        #Find dynamic modules fist, then define the rest.
+        # Find dynamic modules fist, then define the rest.
         cfg.find_module()
 
         cfg.CheckSec('Server')
@@ -117,28 +116,21 @@ def initialize():
         DataBase = cfg.check_str('Data', 'Database', 'Kaidame.vdb')
 
         cfg.CheckSec('General')
-        setup_completed = cfg.check_bool('General', 'Setup_Complete', False)
+        setup_completed = cfg.check_bool('General', 'Setup_Complete', "False")
 
         cfg.config_write()
 
-        #Import modules
-        #------------------------------------------------------------------
-        # for key in modules:
-        #     tmp = 'import Modules.{1} as {0}'.format(key, modules[key])
-        #     exec tmp
-        #     log('Imported {0} from Modules.{1}'.format(key, modules[key]), 'DEBUG')
-
-        #Initialize the database
-        #------------------------------------------------------------------
+        # Initialize the database
+        # ------------------------------------------------------------------
         log("Connecting to database {0}".format(dbasefile), "INFO")
         import Core.Database as Database
 
-        #Scheduler start
-        #------------------------------------------------------------------
+        # Scheduler start
+        # ------------------------------------------------------------------
         scheduler.start()
 
-        #Initialized
-        #------------------------------------------------------------------
+        # Initialized
+        # ------------------------------------------------------------------
         __initialized__ = True
         return True
 

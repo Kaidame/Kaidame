@@ -68,6 +68,9 @@ def start():
         else:
             kaidame.log("Download cap active, not downloading", "INFO")
 
+    kaidame.add_names('nyaatest', True)
+    print kaidame.nyaatest
+
 
 
 

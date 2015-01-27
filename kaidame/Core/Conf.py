@@ -1,6 +1,6 @@
 __author__ = 'Dorbian'
-#Configuration parser script
-#Can run on anything, make a minor mod to the module you are running it in.
+# Configuration parser script
+# Can run on anything, make a minor mod to the module you are running it in.
 import kaidame
 import os
 import ConfigParser
@@ -17,7 +17,7 @@ class ConfigCheck():
             self.logs = True
             kaidame.log("Loading config: {0}".format(kaidame.configfile), "DEBUG")
 
-    #Check if the config key is an integer
+    # Check if the config key is an integer
     def check_int(self, sect, key, def_val, cset=False):
         if not cset:
             try:
@@ -35,7 +35,7 @@ class ConfigCheck():
             self.config.set(sect, key, def_val)
             kaidame.log('** Set INT: {0} : {1} to {2}'.format(sect, key, def_val), 'DEBUG')
 
-    #Check if the config key is a boolean
+    # Check if the config key is a boolean
     def check_bool(self, sect, key, def_val, cset=False):
         if not cset:
             try:
@@ -52,7 +52,7 @@ class ConfigCheck():
             self.config.set(sect, key, def_val)
             kaidame.log('** Set BOOL: {0} : {1} to {2}'.format(sect, key, def_val), 'DEBUG')
 
-    #Check if the config key is a float
+    # Check if the config key is a float
     def check_float(self, sect, key, def_val, cset=False):
         if not cset:
             try:
@@ -69,7 +69,7 @@ class ConfigCheck():
             self.config.set(sect, key, def_val)
             kaidame.log('** Set FLOAT: {0} : {1} to {2}'.format(sect, key, def_val), 'DEBUG')
 
-    #Check if the config key is a string
+    # Check if the config key is a string
     def check_str(self, sect, key, def_val, cset=False):
         if not cset:
             try:
@@ -86,7 +86,7 @@ class ConfigCheck():
             self.config.set(sect, key, def_val)
             kaidame.log('** Set STR: {0} : {1} to {2}'.format(sect, key, def_val), 'DEBUG')
 
-    #Check if section exists
+    # Check if section exists
     def CheckSec(self, sec):
         if self.config.has_section(sec):
             if self.logs:
@@ -95,18 +95,18 @@ class ConfigCheck():
         else:
             self.config.add_section(sec)
 
-    #Write configuration to file
+    # Write configuration to file
     def config_write(self):
         with open(kaidame.configfile, 'wb') as configfile:
             self.config.write(configfile)
         if self.logs:
             kaidame.log('* Wrote Config: {0}'.format(kaidame.configfile), 'DEBUG')
 
-    #Custom Kaidame Addition:
-    #Check for files in the module dir and subdirs, and add them to the config file if needed.
+    # Custom Kaidame Addition:
+    # Check for files in the module dir and subdirs, and add them to the config file if needed.
     def find_module(self):
         for dirname, dirnames, filenames in os.walk(kaidame.moduledir):
-             # print path to all subdirectories first.
+            # print path to all subdirectories first.
             for subdirname in dirnames:
                 section = os.path.basename(os.path.normpath(subdirname))
                 location = os.path.join(kaidame.moduledir, subdirname)
@@ -119,7 +119,7 @@ class ConfigCheck():
                         else:
                             section = os.path.basename(os.path.normpath(subdirname))
                             filenameq, fileextension = os.path.splitext(filename)
-                            self.check_bool(section, filenameq, False)
+                            self.check_bool(section, filenameq, "False")
                             try:
                                 modval = self.config.getboolean(section, filenameq)
                             except AttributeError:
