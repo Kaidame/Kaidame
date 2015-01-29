@@ -1,8 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="dataSourceStorageLocal">
-    <data-source name="Kaidame" uuid="b1d9af56-4460-48c1-b495-9700b3bd5636">
-      <secret-storage>memory</secret-storage>
-    </data-source>
-  </component>
-</project>
+<project version="4" />

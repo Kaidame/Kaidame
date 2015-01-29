@@ -5,8 +5,8 @@ __product__ = 'Kaidame'
 __version__ = '0.0.1'
 
 # Imports from the module itself
-import Core.Logger as Logger
 import Core.Regular_Functions as RF
+import Core.logger as Logger
 import Core.Arguments as Arguments
 import copy
 import sys
@@ -40,7 +40,8 @@ try:
     if not logwriter in globals():
         pass
 except NameError:
-    logwriter = Logger.Loch()
+    rund = RF.get_rundir()
+    logwriter = Logger.Loch(rund)
     if developmentmode is True:
         logwriter._debug = True
         logwriter._trace = True

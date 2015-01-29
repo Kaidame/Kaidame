@@ -12,11 +12,11 @@ from logging import handlers
 
 class Loch(object):
 
-    def __init__(self):
+    def __init__(self, rund):
         self.filename = "kaidame.log"
         self.maxsize = 1000000
         self.maxfiles = 5
-        self.logdir = os.path.abspath(os.path.join(os.path.abspath(unicode(sys.executable, sys.getfilesystemencoding())), (os.path.join("UserData", "Logs"))))
+        self.logdir = os.path.join(rund, (os.path.join("UserData", "Logs")))
         self.loggername = __name__  # "TraceLogger"
         self.level = 9
         self.logfilelocation = ""
