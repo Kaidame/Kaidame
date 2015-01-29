@@ -144,20 +144,14 @@ def start():
             starttime = datetime.datetime.now()
             tmpt = 'schedulet = int(Modules.{0}.{1}.SCHEDULE)'.format(modules[key]['Section'], key)
             tmps = 'scheduler.add_interval_job(Modules.{1}.{0}.start, minutes=schedulet, start_date=starttime+datetime.timedelta(minutes=1))'.format(key, modules[key]['Section'])
+            print tmpt
+            print tmps
             exec tmpt
             exec tmps
+
             log("Loaded Module: {0}".format(key), "INFO")
     for job in scheduler.get_jobs():
         print job
-    # try:
-    #     return sys.modules['Modules.Anime.anidb']
-    # except KeyError:
-    #     print "Nope"
-    # for key in modules:
-    #
-    #     exec tmps
-    # for job in scheduler.get_jobs():
-    #     print job
 
 
 def add_names(varname, conts):
@@ -168,8 +162,3 @@ def add_names(varname, conts):
         exec tmpvars
         exec tmpglob
         exec tmpcont
-
-
-
-    #schedulet = int(anidb.SCHEDULE)
-    #scheduler.add_interval_job(anidb.start, minutes=schedulet, start_date=starttime+datetime.timedelta(minutes=1))
