@@ -136,22 +136,24 @@ def initialize():
         return True
 
 
+def jobs():
+    for job in scheduler.get_jobs():
+        log(job, "DEBUG")
+
+
 def start():
+    starttime = datetime.datetime.now()
     for key in modules:
         tmpt = 'import Modules.{1}.{0} as {0}'.format(key, modules[key]['Section'])
         exec tmpt
+
         if modules[key]['Section'] == 'Collect':
-            starttime = datetime.datetime.now()
             tmpt = 'schedulet = int(Modules.{0}.{1}.SCHEDULE)'.format(modules[key]['Section'], key)
             tmps = 'scheduler.add_interval_job(Modules.{1}.{0}.start, minutes=schedulet, start_date=starttime+datetime.timedelta(minutes=1))'.format(key, modules[key]['Section'])
-            print tmpt
-            print tmps
             exec tmpt
             exec tmps
-
             log("Loaded Module: {0}".format(key), "INFO")
-    for job in scheduler.get_jobs():
-        print job
+    scheduler.add_interval_job(jobs, minutes=15, start_date=starttime+datetime.timedelta(seconds=10))
 
 
 def add_names(varname, conts):

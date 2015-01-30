@@ -53,9 +53,10 @@ def start():
     ret = session.query(DB.exists().where(DB.Options.id == 1)).scalar()
     if not ret:
         kaidame.log("No database downloaded yet, downloading", "INFO")
+        getdata()
         timeout = DB.Options(anidbsync=datetime.utcnow())
         session.add(timeout)
-        getdata()
+        session.commit()
         extract()
     else:
         dled = session.query(DB.Options).filter_by(id=1).first()
@@ -68,8 +69,8 @@ def start():
         else:
             kaidame.log("Download cap active, not downloading", "INFO")
 
-    kaidame.add_names('nyaatest', True)
-    print kaidame.nyaatest
+    #kaidame.add_names('nyaatest', True)
+    #print kaidame.nyaatest
 
 
 
