@@ -52,30 +52,7 @@ docs/_build/
 # PyBuilder
 target/
 
-Data/Kaidame.ini
-
-lss.py
-
-.idea/workspace.xml
-
-.idea/workspace.xml
-
-.idea/dataSources.ids
-
-.idea/workspace.xml
-
-.idea/dataSources.xml
-
-kaidame/Cache/Kaidame.vdb
-
-kaidame/Cache/anime-titles.xml.gz
-
-kaidame/Cache/anime-titles.xml
-
-Data/Kaidame.vdb
-.idea/Kaidame.iml
-.idea/Kaidame.iml
-*.iml
-.idea/Kaidame.iml
-.idea/misc.xml
-.idea/misc.xml
+# Kaidame
+.idea/
+kaidame/Cache/
+UserData/

@@ -137,8 +137,13 @@ def initialize():
 
 
 def jobs():
+    i = 0
     for job in scheduler.get_jobs():
+        i += 1
         log(job, "DEBUG")
+    if (setup_completed) and i <= 1:
+        log("No modules loaded", "ERROR")
+
 
 
 def start():
