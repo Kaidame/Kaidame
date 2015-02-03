@@ -1,7 +1,9 @@
 import kaidame
-import cherrypy
-
 import os
+import cherrypy
+from jinja2 import Environment, FileSystemLoader
+env = Environment(loader=FileSystemLoader(os.path.join(kaidame.server_style, 'templates')))
+
 
 # def serve_template(templatename, **kwargs):
 #
@@ -15,7 +17,10 @@ import os
 #         return template.render(**kwargs)
 #     except:
 #         return exceptions.html_error_template().render()
-
+# 
+# {% include 'header.html' %}
+#     Body
+# {% include 'footer.html' %}
 
 class WebInterface(object):
 
@@ -28,12 +33,13 @@ class WebInterface(object):
     index.exposed = True
 
     def setup(self):
-        return"Welcome to the setup of {0}<br>" \
-              "Please follow below steps to setup the application for use.".format(kaidame.__product__)
+        tmpl = env.get_template('setup.html')
+        return tmpl.render(Product=kaidame.__product__)
     setup.exposed = True
 
     def home(self):
-        return "Hello world!"
+        tmpl = env.get_template('index.html')
+        return tmpl.render(salutation='Hello', target='World')
         #myDB = database.DBConnection()
         #authors = myDB.select('SELECT * from authors order by AuthorName COLLATE NOCASE')
         #return serve_template(templatename="index.html", title="Home", authors=authors)

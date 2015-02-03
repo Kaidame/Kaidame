@@ -28,7 +28,7 @@ developmentmode = True
 __initialized__ = update = setup_completed = False
 # Empty string statements
 configfile = rundir = logdir = datadir = dbasefile = dbfunc = server_port = server_user = server_root = server_host = \
-    server_pass = server_style = debugging = tracing = moduledir = cachedir = ''
+    server_pass = server_style = debugging = tracing = moduledir = cachedir = appdir = ''
 # Empty lists
 options = args = process = []
 # Empty dicts
@@ -58,7 +58,7 @@ def initialize():
         global __initialized__, debugging, rundir, options, args, datadir, logdir, dbasefile, configfile, dbfunc, \
             tracing, process, __product__, __version__, logwriter, webserver, cherrypy, config, cfg, \
             server_port, server_user, server_root, server_host, server_pass, server_style, DataBase, developmentmode, \
-            moduledir, logwriter, cachedir, scheduler, modules, setup_completed
+            moduledir, logwriter, cachedir, scheduler, modules, setup_completed, appdir
 
         # check if arguments where passed
         # ------------------------------------------------------------------
@@ -80,11 +80,11 @@ def initialize():
         RF.add_rundirs(rundir)
 
         log("Initializing {0} {1}".format(__product__, __version__), "INFO")
-
+        appdir = os.path.join(rundir, 'kaidame')
         datadir = os.path.join(rundir, 'UserData')
         logdir = os.path.join(datadir, 'Logs')
-        moduledir = os.path.join(rundir, os.path.join('kaidame', 'Modules'))
-        cachedir = os.path.join(rundir, os.path.join('kaidame', 'Cache'))
+        moduledir = os.path.join(appdir, 'Modules')
+        cachedir = os.path.join(appdir, 'Cache')
 
         configfile = os.path.join(datadir, '{0}.ini'.format(__product__))
         dbasefile = os.path.join(datadir, '{0}.vdb'.format(__product__))
@@ -111,7 +111,7 @@ def initialize():
         server_user = cfg.check_str('Server', 'Username', '')
         server_pass = cfg.check_str('Server', 'Password', '')
         server_root = cfg.check_str('Server', 'Webroot', '/')
-        server_style = cfg.check_str('Server', 'Style', 'default')
+        server_style = os.path.join(os.path.join(appdir, "WebData"), cfg.check_str('Server', 'Style', 'default'))
 
         cfg.CheckSec('Data')
         DataBase = cfg.check_str('Data', 'Database', 'Kaidame.vdb')
