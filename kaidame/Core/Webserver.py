@@ -25,9 +25,9 @@ def initialize():
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "interfaces"
         },
-        '/images': {
+        '/img': {
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': "images"
+            'tools.staticdir.dir': "img"
         },
         '/css': {
             'tools.staticdir.on': True,

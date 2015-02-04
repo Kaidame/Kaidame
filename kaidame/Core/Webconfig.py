@@ -32,9 +32,15 @@ class WebInterface(object):
             raise cherrypy.HTTPRedirect("home")
     index.exposed = True
 
-    def setup(self):
+    def setup(self, **params):
         tmpl = env.get_template('setup.html')
-        return tmpl.render(Product=kaidame.__product__)
+        try:
+            ph = int(params['phase'])
+        except:
+            return tmpl.render(Product=kaidame.__product__, phase=0)
+        if ph == 1:
+            return tmpl.render(Modules=kaidame.modules, phase=1)
+
     setup.exposed = True
 
     def home(self):

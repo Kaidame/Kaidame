@@ -32,7 +32,7 @@ configfile = rundir = logdir = datadir = dbasefile = dbfunc = server_port = serv
 # Empty lists
 options = args = process = []
 # Empty dicts
-tmpd = modules = dict()
+tmpd = modules = mods = dict()
 thread_lock = threading.Lock()
 threading.currentThread().name = __product__
 # ------------------------------------------------------------------
@@ -58,7 +58,7 @@ def initialize():
         global __initialized__, debugging, rundir, options, args, datadir, logdir, dbasefile, configfile, dbfunc, \
             tracing, process, __product__, __version__, logwriter, webserver, cherrypy, config, cfg, \
             server_port, server_user, server_root, server_host, server_pass, server_style, DataBase, developmentmode, \
-            moduledir, logwriter, cachedir, scheduler, modules, setup_completed, appdir
+            moduledir, logwriter, cachedir, scheduler, modules, setup_completed, appdir, mods
 
         # check if arguments where passed
         # ------------------------------------------------------------------
