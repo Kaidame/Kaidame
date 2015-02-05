@@ -6,7 +6,7 @@
 
 ### Database
 - [ ] Import all Anime known
-- [ ] 
+- [ ] import all Dorama known
 
 ### Processes
 - [ ] Show all running processes, including scheduled jobs
@@ -33,3 +33,14 @@
 - [ ] api key for read more, 6 digit private key for write
 
 More to come.
+## Links
+
+### Collectors:
++ [backerstreet](http://www.backerstreet.com/japan/drquery.htm)
++ [tvdrama-db](http://www.tvdrama-db.com/)
++ [jdorama](http://www.jdorama.com/)
++ [Doramax](http://doramax264.com/j-drama-index/)(
+
+### Code:
++ [NZB](https://code.google.com/p/libnzbfetch/wiki/Python)
++ [Torrent](https://pypi.python.org/pypi?%3Aaction=search&term=torrent&submit=search)

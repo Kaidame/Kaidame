@@ -122,7 +122,7 @@ class ConfigCheck():
                             self.check_bool(section, filenameq, "False")
                             try:
                                 modval = self.config.getboolean(section, filenameq)
+                                kaidame.modules.update({filenameq: {'Location': location, "Section": section, "State": modval}})
                             except AttributeError:
                                 modval = False
-                            if modval:
                                 kaidame.modules.update({filenameq: {'Location': location, "Section": section, "State": modval}})

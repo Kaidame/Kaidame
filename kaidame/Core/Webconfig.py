@@ -39,8 +39,8 @@ class WebInterface(object):
         except:
             return tmpl.render(Product=kaidame.__product__, phase=0)
         if ph == 1:
+            print kaidame.modules
             return tmpl.render(Modules=kaidame.modules, phase=1)
-
     setup.exposed = True
 
     def home(self):

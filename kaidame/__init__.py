@@ -153,11 +153,12 @@ def start():
         exec tmpt
 
         if modules[key]['Section'] == 'Collect':
-            tmpt = 'schedulet = int(Modules.{0}.{1}.SCHEDULE)'.format(modules[key]['Section'], key)
-            tmps = 'scheduler.add_interval_job(Modules.{1}.{0}.start, minutes=schedulet, start_date=starttime+datetime.timedelta(minutes=1))'.format(key, modules[key]['Section'])
-            exec tmpt
-            exec tmps
-            log("Loaded Module: {0}".format(key), "INFO")
+            if modules[key]['State'] == True:
+                tmpt = 'schedulet = int(Modules.{0}.{1}.SCHEDULE)'.format(modules[key]['Section'], key)
+                tmps = 'scheduler.add_interval_job(Modules.{1}.{0}.start, minutes=schedulet, start_date=starttime+datetime.timedelta(minutes=1))'.format(key, modules[key]['Section'])
+                exec tmpt
+                exec tmps
+                log("Loaded Module: {0}".format(key), "INFO")
     scheduler.add_interval_job(jobs, minutes=15, start_date=starttime+datetime.timedelta(seconds=10))
 
 
