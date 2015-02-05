@@ -125,4 +125,4 @@ class ConfigCheck():
                             except AttributeError:
                                 modval = False
                             if modval:
-                                kaidame.modules.update({filenameq: {'Location': location, "Section": section}})
+                                kaidame.modules.update({filenameq: {'Location': location, "Section": section, "State": modval}})

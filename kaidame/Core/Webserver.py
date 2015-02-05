@@ -19,15 +19,15 @@ def initialize():
 
     conf = {
         '/': {
-            'tools.staticdir.root': os.path.join(kaidame.rundir, os.path.join("kaidame", "Webdata"))
+            'tools.staticdir.root': kaidame.server_style
         },
         '/interfaces': {
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "interfaces"
         },
-        '/images': {
+        '/img': {
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': "images"
+            'tools.staticdir.dir': "img"
         },
         '/css': {
             'tools.staticdir.on': True,
@@ -37,10 +37,18 @@ def initialize():
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "js"
         },
-        '/favicon.ico': {
-            'tools.staticfile.on': True,
-            'tools.staticfile.filename': "images/favicon.ico"
-        }
+        '/templates': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': "templates"
+        },
+        '/fonts': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': "fonts"
+        },
+        # '/favicon.ico': {
+        #     'tools.staticfile.on': True,
+        #     'tools.staticfile.filename': "images/favicon.ico"
+        # }
     }
 
     if kaidame.server_pass != "":
