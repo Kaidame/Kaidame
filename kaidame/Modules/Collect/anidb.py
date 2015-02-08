@@ -68,15 +68,6 @@ def start():
             extract()
         else:
             kaidame.log("Download cap active, not downloading", "INFO")
-
-    #kaidame.add_names('nyaatest', True)
-    #print kaidame.nyaatest
-
-
-
-
-
-
 #ed_user = User(name='ed', fullname='Ed Jones', password='edspassword')
 
     #X main = Column(String)
@@ -92,6 +83,7 @@ def start():
     # wikilink = Column(String)
 
     #AnimeTitles(anidbid=AnimeID, main=maintitle,
+
 
 def list_import():
     handler = open(DATADESTINATION).read()
@@ -129,5 +121,5 @@ def list_import():
         #
         # if not maintitle in locals():
         #     maintitle = ''
-
+        print u'-------------'
         print u'ID:{0}\nMain:{1}\nJP:{2}\nEN:{3}'.format(anidbid, maintitle, officialjp, officialen)

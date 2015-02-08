@@ -39,7 +39,16 @@ More to come.
 + [backerstreet](http://www.backerstreet.com/japan/drquery.htm)
 + [tvdrama-db](http://www.tvdrama-db.com/)
 + [jdorama](http://www.jdorama.com/)
-+ [Doramax](http://doramax264.com/j-drama-index/)(
++ [Doramax](http://doramax264.com/j-drama-index/)
+* [nt2099](http://www.nt2099.com/DORAMA/)
+- [asianwiki](www.asianwiki.com)
+
+### Downloaders:
++ [torrentkitty](http://www.torrentkitty.org/search/naruto/)
++ [btspread](http://www.btspread.com/search/%E7%81%AB%E5%BD%B1%E5%BF%8D%E8%80%85)
++ [bttiangtiang](http://www.bttiantang.com/subject/9337.html)
+
++ [znbz](znzb.nl)
 
 ### Code:
 + [NZB](https://code.google.com/p/libnzbfetch/wiki/Python)

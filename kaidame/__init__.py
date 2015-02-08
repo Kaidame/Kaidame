@@ -160,7 +160,7 @@ def start():
                 exec tmps
                 log("Loaded Module: {0}".format(key), "INFO")
     scheduler.add_interval_job(jobs, minutes=15, start_date=starttime+datetime.timedelta(seconds=10))
-
+        modules.update({key: {'Location': location, "Section": section, "State": modval}})
 
 def add_names(varname, conts):
     with thread_lock:
